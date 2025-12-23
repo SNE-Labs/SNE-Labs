@@ -2,9 +2,6 @@
 
 **Sistema de Nós de Execução** - Infraestrutura soberana para execução verificável em edge computing.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/SNE-Labs/SNE-Labs/tree/main/SNE%20VAULT)
-
 ## 📋 Sobre o Projeto
 
 SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execução (SNE)**, uma infraestrutura verificável de nível enterprise que fornece:
