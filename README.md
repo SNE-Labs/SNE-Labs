@@ -30,43 +30,6 @@ SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execu�
 
 **Não recomendado para:** Iniciantes em programação ou desenvolvedores sem experiência em sistemas de baixo nível e criptografia.
 
-## 🚀 Deploy no Vercel
-
-### Opção 1: Deploy via GitHub (Recomendado)
-
-1. **Conecte seu repositório ao Vercel:**
-   - Acesse [vercel.com](https://vercel.com)
-   - Clique em "Add New Project"
-   - Importe o repositório `SNE-Labs/SNE-Labs`
-   - Configure o diretório raiz como `SNE VAULT`
-
-2. **Configure as variáveis de ambiente (opcional):**
-   ```
-   VITE_USE_BACKEND=false
-   VITE_SNE_API_URL=https://sne-scroll-pass.vercel.app
-   ```
-
-3. **Deploy:**
-   - O Vercel detectará automaticamente o Vite
-   - O build será executado automaticamente
-   - Seu site estará disponível em alguns minutos
-
-### Opção 2: Deploy via CLI
-
-```bash
-# Instale o Vercel CLI
-npm i -g vercel
-
-# Faça login
-vercel login
-
-# Deploy
-vercel
-
-# Para produção
-vercel --prod
-```
-
 ## 🛠️ Desenvolvimento Local
 
 ### Pré-requisitos Técnicos
