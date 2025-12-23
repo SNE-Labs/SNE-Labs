@@ -1,0 +1,15 @@
+# ⚡ COMANDO RÁPIDO - Copie e Cole no PowerShell
+
+# Opção 1: Instalar com otimizações (MAIS RÁPIDO)
+npm install --no-progress --prefer-offline --legacy-peer-deps
+
+# Opção 2: Se ainda estiver lento, cancelar e usar:
+# Ctrl+C para cancelar npm install atual
+# Depois execute:
+npm cache clean --force
+npm install --no-progress --legacy-peer-deps
+
+# Opção 3: Instalar apenas dependências novas primeiro
+npm install wagmi@^2.0.0 @tanstack/react-query@^5.0.0 @wagmi/core@^2.0.0 @wagmi/connectors@^2.0.0 --legacy-peer-deps
+npm install --legacy-peer-deps
+

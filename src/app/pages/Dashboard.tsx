@@ -2,6 +2,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { MetricCard } from '../components/sne/MetricCard';
 import { StatusBadge } from '../components/sne/StatusBadge';
+import { WalletConnect } from '../../components/passport/WalletConnect';
+import { BalanceDisplay } from '../../components/passport/BalanceDisplay';
+import { GasTracker } from '../../components/passport/GasTracker';
+import { useAccount } from 'wagmi';
 import { Activity, Shield, Zap, Clock } from 'lucide-react';
 
 /**
@@ -92,11 +96,21 @@ function saveLocalPublic(s: Partial<LookupResult>) {
 }
 
 export function Dashboard() {
+  // Wallet state
+  const { address: connectedAddress, isConnected } = useAccount();
+  
   // query state
   const [queryAddr, setQueryAddr] = useState<string>('');
   const [lookup, setLookup] = useState<LookupResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  
+  // Auto-preenchimento quando wallet conectada
+  useEffect(() => {
+    if (isConnected && connectedAddress && !queryAddr) {
+      setQueryAddr(connectedAddress);
+    }
+  }, [isConnected, connectedAddress, queryAddr]);
 
   // a small local audit log - read-only for consumer UI
   const [logs, setLogs] = useState<{ ts: string; msg: string }[]>(() => {
@@ -213,7 +227,10 @@ export function Dashboard() {
             <h1 style={{ color: 'var(--sne-text-primary)' }}>SNE · Scroll Pass</h1>
             <div style={{ color: 'var(--sne-text-secondary)' }}>Camada pública read-only — verifique licenças, chaves e SNE Box.</div>
           </div>
-          <div style={{ marginLeft: 'auto' }}>
+          <div style={{ marginLeft: 'auto' }} className="flex items-center gap-3">
+            {isConnected && <BalanceDisplay />}
+            <GasTracker />
+            <WalletConnect />
             <StatusBadge status="active">Privacidade • Read-only</StatusBadge>
           </div>
         </div>
