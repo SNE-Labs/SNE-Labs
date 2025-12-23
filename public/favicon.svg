@@ -1,0 +1,31 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#0B0B0B"/>
+  
+  <!-- SNE Cube Logo - Isometric 3D Cube -->
+  <g transform="translate(4, 4)">
+    <!-- Cube base (back face) -->
+    <path d="M 8 8 L 20 8 L 20 20 L 8 20 Z" fill="#FF6A00" opacity="0.9"/>
+    
+    <!-- Cube top face (isometric) -->
+    <path d="M 8 8 L 12 4 L 24 4 L 20 8 Z" fill="#FF6A00"/>
+    
+    <!-- Cube right face (isometric) -->
+    <path d="M 20 8 L 24 4 L 24 16 L 20 20 Z" fill="#E65A00"/>
+    
+    <!-- Inner structure - top face pattern -->
+    <path d="M 12 6 L 20 6 L 18 8 L 10 8 Z" fill="#0B0B0B" opacity="0.3"/>
+    
+    <!-- Inner structure - front face void (D-shape) -->
+    <path d="M 10 10 L 18 10 L 18 18 L 10 18 Z" fill="#0B0B0B" opacity="0.4"/>
+    <path d="M 12 12 L 16 12 Q 18 14 16 16 Q 14 18 12 16 Z" fill="#FF6A00" opacity="0.6"/>
+    
+    <!-- Inner structure - L-shape on left -->
+    <path d="M 8 10 L 10 10 L 10 14 L 8 14 Z" fill="#0B0B0B" opacity="0.5"/>
+    
+    <!-- Edge highlights -->
+    <path d="M 8 8 L 20 8" stroke="#FFC857" stroke-width="0.5" opacity="0.6"/>
+    <path d="M 20 8 L 20 20" stroke="#FFC857" stroke-width="0.5" opacity="0.6"/>
+    <path d="M 8 8 L 12 4" stroke="#FFC857" stroke-width="0.5" opacity="0.6"/>
+  </g>
+</svg>

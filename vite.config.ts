@@ -16,4 +16,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  publicDir: 'public',
+  build: {
+    // Garantir que arquivos estáticos sejam copiados corretamente
+    copyPublicDir: true,
+  },
 })
