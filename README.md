@@ -30,22 +30,6 @@ SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execu�
 
 **Não recomendado para:** Iniciantes em programação ou desenvolvedores sem experiência em sistemas de baixo nível e criptografia.
 
-## 📁 Estrutura do Projeto
-
-```
-SNE VAULT/
-├── src/
-│   ├── app/
-│   │   ├── components/
-│   │   │   ├── sne/          # Componentes do design system SNE
-│   │   │   └── ui/           # Componentes shadcn/ui
-│   │   └── pages/            # Páginas da aplicação
-│   └── styles/               # Estilos globais
-├── public/                   # Arquivos estáticos
-├── index.html                # Ponto de entrada HTML
-├── vite.config.ts            # Configuração do Vite
-├── tsconfig.json             # Configuração TypeScript
-└── vercel.json               # Configuração do Vercel
 ```
 
 
@@ -67,25 +51,6 @@ Veja a documentação completa em [`SNE-DESIGN-SYSTEM.md`](./SNE-DESIGN-SYSTEM.m
   - SNE Box (hardware híbrido ARM + ASIC)
   - Governança e SNIPs
 - **Contracts** - Informações sobre smart contracts, SDK e exemplos de integração
-
-## 🔧 Variáveis de Ambiente
-
-Crie um arquivo `.env` na raiz do projeto:
-
-```env
-# Habilitar backend (true/false)
-# Quando false, o Dashboard usa dados mock para demonstração
-VITE_USE_BACKEND=false
-
-# URL da API backend para leitura on-chain
-# Deve apontar para um serviço que faz proxy para Scroll L2
-VITE_SNE_API_URL=https://sne-scroll-pass.vercel.app
-```
-
-> **Importante:** Para produção, você precisará de um backend que:
-> - Conecte-se à Scroll L2 via RPC
-> - Leia dados do contrato `SNELicenseRegistry`
-> - Implemente endpoints `/api/onchain/lookup` e `/api/onchain/check`
 
 ## 🌐 Stack Tecnológica
 
@@ -124,7 +89,7 @@ SNE Labs - [GitHub](https://github.com/SNE-Labs)
 
 ### Conceitos Técnicos Avançados
 
-O SNE implementa conceitos avançados de:
+O SNE Labs implementa conceitos avançados de:
 
 - **Criptografia:** AES-256, KDF, assinaturas ECDSA, Merkle proofs
 - **Hardware Security:** Secure Elements, TPM, TEE, tamper detection
@@ -144,6 +109,4 @@ Se você é novo nesses conceitos, recomendamos estudar:
 ---
 
 **Desenvolvido com ❤️ pela equipe SNE Labs**
-
-> **Aviso Legal:** Este é um projeto técnico avançado. Use por sua conta e risco. Certifique-se de entender completamente os conceitos de segurança antes de implementar em produção.
 
