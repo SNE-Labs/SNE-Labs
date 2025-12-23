@@ -3,10 +3,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { MetricCard } from '../components/sne/MetricCard';
 import { StatusBadge } from '../components/sne/StatusBadge';
 import { WalletConnect } from '../../components/passport/WalletConnect';
-import { useLookupAddress, useProducts, useCheckLicense } from '../../hooks/usePassportData';
+import { useLookupAddress, useCheckLicense } from '../../hooks/usePassportData';
+import { PRODUCTS } from '../../data/products';
 import { useAccount } from 'wagmi';
 import { Shield, AlertCircle, Search } from 'lucide-react';
-import { Skeleton } from '../components/ui/skeleton';
 import { ProductCard } from '../../components/passport/ProductCard';
 import { CheckoutModal } from '../../components/passport/CheckoutModal';
 import type { Product } from '../../types/passport';
@@ -98,7 +98,9 @@ export function Dashboard() {
 
   // Hooks do Passport
   const lookupQuery = useLookupAddress(manualLookup);
-  const productsQuery = useProducts();
+  
+  // Produtos definidos localmente (não dependem de API)
+  const products = PRODUCTS;
   
   // Estado derivado dos hooks
   const lookup = lookupQuery.data || null;
@@ -307,67 +309,19 @@ export function Dashboard() {
           <p style={{ color: 'var(--sne-text-secondary)', marginBottom: 12 }}>
             Adquira SNE Box, SNE Keys e Licenças. Conecte sua wallet para realizar a compra.
           </p>
-            {productsQuery.isLoading ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className="h-20 w-full" />
-                ))}
-              </div>
-            ) : productsQuery.error ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 p-3 rounded border" style={{ backgroundColor: 'var(--sne-surface-elevated)', borderColor: 'var(--border)' }}>
-                  <AlertCircle className="w-4 h-4" style={{ color: 'var(--sne-critical)' }} />
-                  <div className="flex-1">
-                    <div className="text-sm" style={{ color: 'var(--sne-critical)', fontWeight: 600 }}>
-                      Erro ao carregar produtos
-                    </div>
-                    <div className="text-xs mt-1" style={{ color: 'var(--sne-text-secondary)' }}>
-                      {productsQuery.error instanceof Error 
-                        ? productsQuery.error.message 
-                        : 'A API do Passport pode estar temporariamente indisponível. Tente novamente em alguns instantes.'}
-                    </div>
-                  </div>
-                </div>
-                {/* Fallback: Produtos básicos quando API falha */}
-                <div className="p-3 rounded border" style={{ backgroundColor: 'var(--sne-bg)', borderColor: 'var(--border)', opacity: 0.7 }}>
-                  <div className="text-xs mb-2" style={{ color: 'var(--sne-text-secondary)', fontStyle: 'italic' }}>
-                    Informações básicas (API indisponível):
-                  </div>
-                  <div className="space-y-2">
-                    <div className="text-sm" style={{ color: 'var(--sne-text-primary)' }}>
-                      <strong>SNE Box</strong> — Hardware seguro com Secure Enclave
-                    </div>
-                    <div className="text-sm" style={{ color: 'var(--sne-text-primary)' }}>
-                      <strong>SNE Keys</strong> — Chaves físicas e virtuais
-                    </div>
-                    <div className="text-sm" style={{ color: 'var(--sne-text-primary)' }}>
-                      <strong>Licenças</strong> — Acesso a nós SNE
-                    </div>
-                  </div>
-                  <div className="mt-3 text-xs" style={{ color: 'var(--sne-text-secondary)' }}>
-                    Para informações de preços e disponibilidade, conecte-se ao{' '}
-                    <a href="https://pass.snelabs.space" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--sne-accent)' }}>
-                      SNE Scroll Passport
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ) : productsQuery.data?.products && productsQuery.data.products.length > 0 ? (
+            {products.length > 0 ? (
               <div className="space-y-4">
-                {productsQuery.data.products.map((p) => (
+                {products.map((p) => (
                   <ProductCard 
                     key={p.id} 
                     product={p}
-                    onPurchase={(productId) => {
+                    onPurchase={(product) => {
                       if (!isConnected) {
                         alert('Por favor, conecte sua wallet para realizar a compra.');
                         return;
                       }
-                      const selectedProduct = productsQuery.data.products.find(prod => prod.id === productId);
-                      if (selectedProduct) {
-                        setCheckoutProduct(selectedProduct);
-                        setCheckoutOpen(true);
-                      }
+                      setCheckoutProduct(product);
+                      setCheckoutOpen(true);
                     }}
                   />
                 ))}

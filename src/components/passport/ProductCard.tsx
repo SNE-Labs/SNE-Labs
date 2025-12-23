@@ -5,7 +5,7 @@ import { Button } from '../../app/components/ui/button';
 
 interface ProductCardProps {
   product: Product;
-  onPurchase: (productId: string) => void;
+  onPurchase: (product: Product) => void;
 }
 
 /**
@@ -118,7 +118,7 @@ export function ProductCard({ product, onPurchase }: ProductCardProps) {
       {/* Botão de compra */}
       <div className="mt-3 flex items-center gap-2">
         <Button
-          onClick={() => onPurchase(product.id)}
+          onClick={() => onPurchase(product)}
           disabled={!product.available}
           className="flex-1 flex items-center justify-center gap-2"
           style={{
