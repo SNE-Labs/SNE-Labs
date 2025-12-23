@@ -5,8 +5,10 @@ import { StatusBadge } from '../components/sne/StatusBadge';
 import { WalletConnect } from '../../components/passport/WalletConnect';
 import { BalanceDisplay } from '../../components/passport/BalanceDisplay';
 import { GasTracker } from '../../components/passport/GasTracker';
+import { useLookupAddress, useProducts, useCheckLicense } from '../../hooks/usePassportData';
 import { useAccount } from 'wagmi';
-import { Activity, Shield, Zap, Clock } from 'lucide-react';
+import { Activity, Shield, Zap, Clock, AlertCircle } from 'lucide-react';
+import { Skeleton } from '../components/ui/skeleton';
 
 /**
  * Consumer-focused Read-only Dashboard for SNE (SNE Pass / SNE Keys / SNE Box)
@@ -19,9 +21,7 @@ import { Activity, Shield, Zap, Clock } from 'lucide-react';
  * Purchase flows and management remain in separate checkout / app flows (wallet required).
  */
 
-const API_BASE =
-  (import.meta.env?.VITE_SNE_API_URL as string | undefined) ?? 'https://snelabs.space/api';
-const USE_BACKEND = ((import.meta.env?.VITE_USE_BACKEND as string | undefined) ?? 'false') === 'true';
+// API_BASE e USE_BACKEND removidos - agora usa hooks do Passport diretamente
 
 type License = {
   id: string;
@@ -53,26 +53,7 @@ type LookupResult = {
   pou?: { nodesPublic: number };
 };
 
-const PRODUCTS = [
-  {
-    id: 'box-tier3',
-    title: 'SNE Box — Tier 3',
-    priceUSD: '3,499',
-    features: ['Secure Enclave', 'Starlink-ready', 'Tamper Line'],
-  },
-  {
-    id: 'key-physical',
-    title: 'SNE Physical Key',
-    priceUSD: '199',
-    features: ['FIDO2', 'Tamper-proof', 'Reprovisioning'],
-  },
-  {
-    id: 'license-pro',
-    title: 'SNE Pro License',
-    priceUSD: '499',
-    features: ['Pro Node Access', 'Governance Voting', 'Priority Support'],
-  },
-];
+// PRODUCTS removido - agora usa useProducts() hook do Passport
 
 const LOCAL_KEY = 'sne_dashboard_public_v1';
 
@@ -101,9 +82,7 @@ export function Dashboard() {
   
   // query state
   const [queryAddr, setQueryAddr] = useState<string>('');
-  const [lookup, setLookup] = useState<LookupResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
+  const [manualLookup, setManualLookup] = useState<string | null>(null);
   
   // Auto-preenchimento quando wallet conectada
   useEffect(() => {
@@ -112,17 +91,22 @@ export function Dashboard() {
     }
   }, [isConnected, connectedAddress, queryAddr]);
 
+  // Hooks do Passport
+  const lookupQuery = useLookupAddress(manualLookup);
+  const productsQuery = useProducts();
+  
+  // Estado derivado dos hooks
+  const lookup = lookupQuery.data || null;
+  const loading = lookupQuery.isLoading;
+  const err = lookupQuery.error ? String(lookupQuery.error) : null;
+
   // a small local audit log - read-only for consumer UI
   const [logs, setLogs] = useState<{ ts: string; msg: string }[]>(() => {
     const raw = loadLocalPublic();
     return raw ? [{ ts: new Date().toISOString(), msg: 'Cached public state loaded' }] : [];
   });
 
-  // hydrate cached public result on mount
-  useEffect(() => {
-    const cached = loadLocalPublic();
-    if (cached) setLookup(cached);
-  }, []);
+  // hydrate cached public result on mount - removido, agora usa lookupQuery.data
 
   const appendLog = useCallback((msg: string) => {
     const entry = { ts: new Date().toISOString(), msg };
@@ -132,85 +116,66 @@ export function Dashboard() {
     });
   }, []);
 
-  // Mock fallback (when no backend) — deterministic sample
-  const MOCK_LOOKUP = useCallback((addr: string): LookupResult => {
-    return {
-      licenses: [
-        { id: 'SNE-PRO-001', nodeId: '0x4a7b...c3f9', name: 'Pro Node', status: 'active', power: 'Pro Node', lastChecked: null },
-        { id: 'SNE-EDGE-22', nodeId: '0x8d2e...f7a1', name: 'Edge Node', status: 'active', power: 'Edge', lastChecked: null },
-      ],
-      keys: [
-        { id: 'phys-01', type: 'physical', boundTo: Math.random() > 0.5 ? addr : null, status: Math.random() > 0.5 ? 'bound' : 'unbound' },
-      ],
-      boxes: [
-        { id: 'box-1', tier: 'tier3', provisioned: Math.random() > 0.5, lastSeen: new Date().toISOString() },
-      ],
-      pou: { nodesPublic: 12 },
-    };
-  }, []);
+  // MOCK_LOOKUP removido - agora usa useLookupAddress() hook do Passport
 
-  // perform a public lookup (read-only). Prefer backend proxy for on-chain reads.
+  // perform a public lookup usando hook do Passport
   const performLookup = useCallback(
-    async (addr: string) => {
-      setLoading(true);
-      setErr(null);
-      setLookup(null);
-      appendLog(`Lookup started for ${addr}`);
-      try {
-        if (USE_BACKEND) {
-          const res = await fetch(`${API_BASE}/api/onchain/lookup?addr=${encodeURIComponent(addr)}`);
-          if (!res.ok) {
-            const txt = await res.text().catch(() => '');
-            throw new Error(`HTTP ${res.status} ${txt}`);
-          }
-          const data = await res.json();
-          // expect structure: { licenses:[], keys:[], boxes:[], pou: { nodesPublic } }
-          setLookup(data);
-          saveLocalPublic(data);
-          appendLog(`Lookup succeeded (backend) for ${addr}`);
-        } else {
-          // backendless: use deterministic mock and inform user
-          const mock = MOCK_LOOKUP(addr);
-          setLookup(mock);
-          saveLocalPublic(mock);
-          appendLog(`Lookup fallback (mock) used for ${addr}`);
-        }
-      } catch (e: any) {
-        const msg = String(e?.message ?? e);
-        setErr(msg);
-        appendLog(`Lookup failed: ${msg}`);
-      } finally {
-        setLoading(false);
+    (addr: string) => {
+      const trimmed = addr.trim();
+      if (!trimmed) return;
+      
+      setManualLookup(trimmed);
+      appendLog(`Lookup started for ${trimmed}`);
+      
+      // Salvar no localStorage quando dados chegarem
+      if (lookupQuery.data) {
+        saveLocalPublic(lookupQuery.data);
+        appendLog(`Lookup succeeded for ${trimmed}`);
       }
     },
-    [appendLog, MOCK_LOOKUP]
+    [appendLog, lookupQuery.data]
   );
 
-  // call checkAccess for a specific nodeId (on-chain read). Only available if backend configured.
-  const checkLicenseOnChain = useCallback(
-    async (nodeId: string, onResult: (ok: boolean | null, err?: string) => void) => {
-      appendLog(`checkAccess requested for ${nodeId}`);
-      if (!USE_BACKEND) {
-        onResult(null, 'On-chain check unavailable (backend disabled).');
-        return;
-      }
-      try {
-        const res = await fetch(`${API_BASE}/api/onchain/check?node=${encodeURIComponent(nodeId)}`);
-        if (!res.ok) {
-          const txt = await res.text().catch(() => '');
-          throw new Error(`HTTP ${res.status} ${txt}`);
-        }
-        const data = await res.json();
-        onResult(Boolean(data?.access ?? null));
-        appendLog(`checkAccess(${nodeId}) => ${String(data?.access)}`);
-      } catch (e: any) {
-        const msg = String(e?.message ?? e);
-        onResult(null, msg);
+  // Salvar lookup no localStorage quando dados mudarem
+  useEffect(() => {
+    if (lookupQuery.data && manualLookup) {
+      saveLocalPublic(lookupQuery.data);
+    }
+  }, [lookupQuery.data, manualLookup]);
+
+  // Componente para verificar licença on-chain usando hook
+  function LicenseCheckButton({ nodeId, licenseId }: { nodeId: string; licenseId: string }) {
+    const [isChecking, setIsChecking] = useState(false);
+    const checkQuery = useCheckLicense(isChecking ? nodeId : null);
+    
+    useEffect(() => {
+      if (checkQuery.data && isChecking) {
+        const access = checkQuery.data.access;
+        alert(`checkAccess: ${access ? 'OK' : 'NÃO'}`);
+        appendLog(`checkAccess(${nodeId}) => ${String(access)}`);
+        setIsChecking(false);
+      } else if (checkQuery.error && isChecking) {
+        const msg = String(checkQuery.error);
+        alert(`Erro: ${msg}`);
         appendLog(`checkAccess failed for ${nodeId}: ${msg}`);
+        setIsChecking(false);
       }
-    },
-    [appendLog]
-  );
+    }, [checkQuery.data, checkQuery.error, isChecking, nodeId]);
+    
+    return (
+      <button
+        onClick={() => {
+          setIsChecking(true);
+          appendLog(`checkAccess requested for ${nodeId}`);
+        }}
+        disabled={isChecking || checkQuery.isLoading}
+        className="px-3 py-1 rounded"
+        style={{ backgroundColor: 'var(--sne-surface-elevated)' }}
+      >
+        {isChecking || checkQuery.isLoading ? 'Verificando…' : 'Verificar on-chain'}
+      </button>
+    );
+  }
 
   // small helpers for metrics
   const licensesCount = lookup?.licenses?.length ?? 0;
@@ -252,7 +217,7 @@ export function Dashboard() {
             />
             <button
               onClick={() => performLookup(queryAddr.trim())}
-              disabled={!queryAddr || loading}
+              disabled={!queryAddr.trim() || loading}
               className="px-4 py-2 rounded"
               style={{ backgroundColor: 'var(--sne-surface-elevated)' }}
             >
@@ -262,8 +227,7 @@ export function Dashboard() {
             <button
               onClick={() => {
                 setQueryAddr('');
-                setLookup(null);
-                setErr(null);
+                setManualLookup(null);
                 appendLog('Lookup cleared by user');
               }}
               className="px-3 py-2 rounded"
@@ -307,31 +271,10 @@ export function Dashboard() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        checkLicenseOnChain(lic.nodeId ?? lic.id, (ok, e) => {
-                          if (ok === null) {
-                            alert(e ?? 'On-chain unavailable.');
-                            return;
-                          }
-                          alert(`checkAccess: ${ok ? 'OK' : 'NÃO'}`);
-                          // update UI state
-                          setLookup((prev) => {
-                            if (!prev) return prev;
-                            return {
-                              ...prev,
-                              licenses: prev.licenses.map((l) =>
-                                l.id === lic.id ? { ...l, lastChecked: new Date().toISOString() } : l
-                              ),
-                            };
-                          });
-                        });
-                      }}
-                      className="px-3 py-1 rounded"
-                      style={{ backgroundColor: 'var(--sne-surface-elevated)' }}
-                    >
-                      Verificar on-chain
-                    </button>
+                    <LicenseCheckButton 
+                      nodeId={lic.nodeId ?? lic.id} 
+                      licenseId={lic.id}
+                    />
 
                     <a
                       href={`/licenses/${encodeURIComponent(lic.id)}`}
@@ -409,20 +352,44 @@ export function Dashboard() {
           <div className="rounded border p-6" style={{ backgroundColor: 'var(--sne-surface-1)', borderColor: 'var(--border)' }}>
             <h4 style={{ color: 'var(--sne-text-primary)' }}>Comprar / Adquirir</h4>
             <p style={{ color: 'var(--sne-text-secondary)', marginBottom: 8 }}>Adquira SNE Box, SNE Keys e Licenças. O checkout requer wallet/flow de compra.</p>
-            <div className="space-y-3">
-              {PRODUCTS.map((p) => (
-                <div key={p.id} className="p-3 rounded border" style={{ backgroundColor: 'var(--sne-bg)', borderColor: 'var(--border)' }}>
-                  <div style={{ fontWeight: 700 }}>{p.title}</div>
-                  <div style={{ color: 'var(--sne-text-secondary)', fontSize: '0.9rem' }}>{p.features.join(' • ')}</div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <div style={{ fontWeight: 600 }}>USD ${p.priceUSD}</div>
-                    <a href={`/checkout/${p.id}`} className="px-3 py-1 rounded" style={{ backgroundColor: 'var(--sne-surface-elevated)' }}>
-                      Comprar
-                    </a>
+            {productsQuery.isLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-20 w-full" />
+                ))}
+              </div>
+            ) : productsQuery.error ? (
+              <div className="flex items-center gap-2 p-3 rounded" style={{ backgroundColor: 'var(--sne-surface-elevated)', color: 'var(--sne-critical)' }}>
+                <AlertCircle className="w-4 h-4" />
+                <span className="text-sm">Erro ao carregar produtos. Tente novamente mais tarde.</span>
+              </div>
+            ) : productsQuery.data?.products && productsQuery.data.products.length > 0 ? (
+              <div className="space-y-3">
+                {productsQuery.data.products.map((p) => (
+                  <div key={p.id} className="p-3 rounded border" style={{ backgroundColor: 'var(--sne-bg)', borderColor: 'var(--border)' }}>
+                    <div style={{ fontWeight: 700 }}>{p.title}</div>
+                    <div style={{ color: 'var(--sne-text-secondary)', fontSize: '0.9rem' }}>
+                      {p.features?.join(' • ') || 'Ver detalhes'}
+                    </div>
+                    <div className="mt-2 flex items-center justify-between">
+                      <div style={{ fontWeight: 600 }}>
+                        USD ${p.priceUSD}
+                        {p.priceETH && <span className="text-sm ml-2" style={{ color: 'var(--sne-text-secondary)' }}>({p.priceETH} ETH)</span>}
+                      </div>
+                      <a 
+                        href={`/checkout/${p.id}`} 
+                        className="px-3 py-1 rounded" 
+                        style={{ backgroundColor: 'var(--sne-surface-elevated)' }}
+                      >
+                        {p.available ? 'Comprar' : 'Indisponível'}
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ color: 'var(--sne-text-secondary)' }}>Nenhum produto disponível no momento.</div>
+            )}
           </div>
         </div>
 
