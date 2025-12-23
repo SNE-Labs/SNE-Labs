@@ -30,57 +30,6 @@ SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execu�
 
 **Não recomendado para:** Iniciantes em programação ou desenvolvedores sem experiência em sistemas de baixo nível e criptografia.
 
-## 🛠️ Desenvolvimento Local
-
-### Pré-requisitos Técnicos
-
-**Software:**
-- Node.js >= 18.0.0
-- npm >= 9.0.0
-- TypeScript >= 5.2.2
-- Git
-
-**Conhecimento Recomendado:**
-- React 18+ e TypeScript
-- Vite e bundlers modernos
-- Tailwind CSS v4
-- Conceitos de blockchain (Ethereum, L2s)
-- Noções básicas de criptografia
-
-### Instalação
-
-```bash
-# Clone o repositório
-git clone https://github.com/SNE-Labs/SNE-Labs.git
-cd "SNE VAULT"
-
-# Instale as dependências
-npm install
-
-# Inicie o servidor de desenvolvimento
-npm run dev
-```
-
-O projeto estará disponível em `http://localhost:5173`
-
-> **Nota:** O frontend é uma interface de documentação e dashboard. A implementação completa do SNE requer componentes backend, smart contracts na Scroll L2, e hardware especializado (SNE Box).
-
-### Scripts Disponíveis
-
-```bash
-# Desenvolvimento
-npm run dev
-
-# Build para produção
-npm run build
-
-# Preview do build
-npm run preview
-
-# Lint
-npm run lint
-```
-
 ## 📁 Estrutura do Projeto
 
 ```
@@ -140,13 +89,6 @@ VITE_SNE_API_URL=https://sne-scroll-pass.vercel.app
 
 ## 🌐 Stack Tecnológica
 
-### Frontend
-- **React 18** - Biblioteca UI com TypeScript
-- **Vite** - Build tool e dev server (ESM, HMR)
-- **Tailwind CSS v4** - Estilização utility-first
-- **shadcn/ui** - Componentes UI baseados em Radix UI
-- **Lucide React** - Ícones SVG
-
 ### Blockchain & Web3
 - **Viem** - Cliente Ethereum/Scroll L2 (TypeScript)
 - **Scroll L2** - Layer 2 blockchain para smart contracts
@@ -168,36 +110,6 @@ Este projeto está licenciado sob a [MIT License](https://opensource.org/license
 - **Repositório:** [github.com/SNE-Labs/SNE-Labs](https://github.com/SNE-Labs/SNE-Labs)
 - **Documentação:** Ver seção Docs na aplicação
 - **Design System:** [`SNE-DESIGN-SYSTEM.md`](./SNE-DESIGN-SYSTEM.md)
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Este projeto requer conhecimento técnico avançado.
-
-### Antes de Contribuir
-
-- Leia toda a documentação técnica em `/docs`
-- Entenda a arquitetura do sistema
-- Familiarize-se com os conceitos de segurança criptográfica
-- Revise os smart contracts na Scroll L2
-
-### Processo
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Siga os padrões de código existentes (TypeScript strict, ESLint)
-4. Adicione testes se aplicável
-5. Atualize a documentação se necessário
-6. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-7. Push para a branch (`git push origin feature/AmazingFeature`)
-8. Abra um Pull Request com descrição detalhada
-
-### Áreas que Precisam de Contribuição
-
-- Melhorias na documentação técnica
-- Exemplos de código adicionais
-- Testes e validações
-- Otimizações de performance
-- Traduções (atualmente em português)
 
 ## 📧 Contato
 
