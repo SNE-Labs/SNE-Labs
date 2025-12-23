@@ -1,4 +1,3 @@
-import React from "react";
 import { Activity, Shield, Key, ArrowRight, Github, FileText } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { StatusBadge } from "../components/sne/StatusBadge";

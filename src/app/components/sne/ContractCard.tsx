@@ -1,4 +1,4 @@
-import { FileText, ExternalLink, CheckCircle2, Copy } from 'lucide-react';
+import { FileText, ExternalLink, Copy } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { useState } from 'react';
 

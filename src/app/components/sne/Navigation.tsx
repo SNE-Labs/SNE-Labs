@@ -48,7 +48,7 @@ export function Navigation({ variant = 'default', onNavigate, onConnectWallet }:
   }, []);
 
   const navigateTo = useCallback(
-    (link: any) => {
+    (link: { href?: string; page?: Page; section?: string }) => {
       let href = '';
       if (link.href) href = link.href;
       else if (link.page) {

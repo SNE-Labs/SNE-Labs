@@ -1,3 +1,4 @@
+import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 interface MetricCardProps {
@@ -16,7 +17,6 @@ export function MetricCard({ label, value, trend, trendValue, icon }: MetricCard
   };
 
   const trendInfo = trend ? trendConfig[trend] : null;
-  const TrendIcon = trendInfo?.icon;
 
   return (
     <div
@@ -45,9 +45,9 @@ export function MetricCard({ label, value, trend, trendValue, icon }: MetricCard
         </span>
       </div>
 
-      {trendInfo && trendValue && (
+      {trendInfo && trendValue && trendInfo.icon && (
         <div className="flex items-center gap-1.5">
-          <TrendIcon className="w-4 h-4" style={{ color: trendInfo.color }} />
+          {React.createElement(trendInfo.icon, { className: "w-4 h-4", style: { color: trendInfo.color } })}
           <span
             style={{
               fontSize: 'var(--text-small)',

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  FileText,
   Book,
   Code,
   Shield,
@@ -880,7 +879,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -903,7 +902,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -926,7 +925,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -949,7 +948,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -993,7 +992,7 @@ const client = new SNEClient({
                     style={{
                       color: "var(--sne-text-secondary)",
                       fontSize: "var(--text-body)",
-                      overflowWrap: "anyway",
+                      overflowWrap: "anywhere",
                       wordBreak: "break-word",
                     }}
                   >
@@ -1025,7 +1024,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -1049,7 +1048,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -1074,7 +1073,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -1130,7 +1129,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -1154,7 +1153,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >
@@ -1178,7 +1177,7 @@ const client = new SNEClient({
                   className="break-words whitespace-normal"
                   style={{
                     color: "var(--sne-text-secondary)",
-                    overflowWrap: "anyway",
+                    overflowWrap: "anywhere",
                     wordBreak: "break-word",
                   }}
                 >

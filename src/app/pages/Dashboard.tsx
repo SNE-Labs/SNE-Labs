@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { MetricCard } from '../components/sne/MetricCard';
 import { StatusBadge } from '../components/sne/StatusBadge';
 import { Activity, Shield, Zap, Clock } from 'lucide-react';
-import type { Address } from 'viem';
 
 /**
  * Consumer-focused Read-only Dashboard for SNE (SNE Pass / SNE Keys / SNE Box)
@@ -17,8 +16,8 @@ import type { Address } from 'viem';
  */
 
 const API_BASE =
-  import.meta.env.VITE_SNE_API_URL ?? 'https://sne-scroll-pass.vercel.app';
-const USE_BACKEND = (import.meta.env.VITE_USE_BACKEND ?? 'false') === 'true';
+  (import.meta.env?.VITE_SNE_API_URL as string | undefined) ?? 'https://sne-scroll-pass.vercel.app';
+const USE_BACKEND = ((import.meta.env?.VITE_USE_BACKEND as string | undefined) ?? 'false') === 'true';
 
 type License = {
   id: string;
