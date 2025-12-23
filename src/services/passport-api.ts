@@ -119,13 +119,36 @@ export async function getGasPrice(): Promise<GasResponse> {
  */
 export async function getProducts(): Promise<ProductsResponse> {
   const url = `${API_BASE}/sne/products`;
-  const response = await fetchWithRetry(url);
   
-  if (!response.ok) {
-    const error: ErrorResponse = await response.json();
-    throw new Error(error.message || error.error);
+  try {
+    const response = await fetchWithRetry(url);
+    
+    if (!response.ok) {
+      // Tentar parsear erro, mas não falhar se não conseguir
+      try {
+        const error: ErrorResponse = await response.json();
+        throw new Error(error.message || error.error || `HTTP ${response.status}`);
+      } catch (parseError) {
+        throw new Error(`Erro ao buscar produtos: HTTP ${response.status}`);
+      }
+    }
+    
+    const data = await response.json();
+    
+    // Validar estrutura básica
+    if (!data || !Array.isArray(data.products)) {
+      throw new Error('Resposta da API em formato inválido');
+    }
+    
+    return data;
+  } catch (error) {
+    // Log do erro para debugging (apenas em dev)
+    if (import.meta.env.DEV) {
+      console.error('[Passport API] Erro ao buscar produtos:', error);
+    }
+    
+    // Re-throw para que o hook possa tratar
+    throw error;
   }
-  
-  return await response.json();
 }
 

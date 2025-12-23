@@ -1,7 +1,8 @@
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { Button } from '../../app/components/ui/button';
-import { Wallet, LogOut } from 'lucide-react';
+import { Wallet, LogOut, CheckCircle2 } from 'lucide-react';
+import { formatAddress } from '../../utils/format';
 
 /**
  * Componente de conexão de wallet
@@ -15,11 +16,23 @@ export function WalletConnect() {
   if (isConnected && address) {
     return (
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 px-3 py-2 rounded" style={{ backgroundColor: 'var(--sne-surface-1)' }}>
-          <Wallet className="w-4 h-4" style={{ color: 'var(--sne-accent)' }} />
-          <span style={{ color: 'var(--sne-text-primary)', fontSize: '0.9rem' }}>
-            {address.slice(0, 6)}...{address.slice(-4)}
-          </span>
+        <div className="flex items-center gap-2 px-3 py-2 rounded border" style={{ 
+          backgroundColor: 'var(--sne-surface-1)', 
+          borderColor: 'var(--sne-accent)',
+          borderWidth: '1px'
+        }}>
+          <div className="relative">
+            <Wallet className="w-4 h-4" style={{ color: 'var(--sne-accent)' }} />
+            <CheckCircle2 className="w-3 h-3 absolute -top-1 -right-1" style={{ color: 'var(--sne-accent)' }} fill="currentColor" />
+          </div>
+          <div className="flex flex-col">
+            <span style={{ color: 'var(--sne-text-primary)', fontSize: '0.9rem', fontWeight: 600, fontFamily: 'var(--font-family-mono)' }}>
+              {formatAddress(address)}
+            </span>
+            <span style={{ color: 'var(--sne-text-secondary)', fontSize: '0.75rem' }}>
+              Scroll L2
+            </span>
+          </div>
         </div>
         <Button
           onClick={() => disconnect()}

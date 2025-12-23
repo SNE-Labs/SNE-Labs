@@ -88,6 +88,11 @@ export function useProducts() {
     queryFn: () => getProducts(),
     staleTime: 30 * 60 * 1000, // 30 minutos
     gcTime: 60 * 60 * 1000, // 1 hora
+    retry: 2, // Retry 2 vezes (total 3 tentativas)
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000), // Exponential backoff
+    // Não refetch automático em caso de erro persistente
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true, // Refetch quando conexão restabelecida
   });
 }
 

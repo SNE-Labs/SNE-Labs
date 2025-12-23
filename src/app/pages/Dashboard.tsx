@@ -9,6 +9,9 @@ import { useLookupAddress, useProducts, useCheckLicense } from '../../hooks/useP
 import { useAccount } from 'wagmi';
 import { Activity, Shield, Zap, Clock, AlertCircle } from 'lucide-react';
 import { Skeleton } from '../components/ui/skeleton';
+import { AddressBalance } from '../../components/passport/AddressBalance';
+import { formatAddress } from '../../utils/format';
+import type { Address } from '../../types/passport';
 
 /**
  * Consumer-focused Read-only Dashboard for SNE (SNE Pass / SNE Keys / SNE Box)
@@ -237,8 +240,23 @@ export function Dashboard() {
             </button>
           </div>
 
-          {err && <div style={{ color: 'var(--sne-critical)', marginTop: 8 }}>Erro: {err}</div>}
+          {err && (
+            <div className="flex items-center gap-2 mt-2" style={{ color: 'var(--sne-critical)' }}>
+              <AlertCircle className="w-4 h-4" />
+              <span>Erro: {err}</span>
+            </div>
+          )}
         </div>
+
+        {/* Balance do endereço pesquisado */}
+        {queryAddr.trim() && /^0x[a-fA-F0-9]{40}$/.test(queryAddr.trim()) && (
+          <div className="mb-6">
+            <AddressBalance 
+              address={queryAddr.trim() as Address} 
+              label={`Balance de ${formatAddress(queryAddr.trim())}`}
+            />
+          </div>
+        )}
 
         {/* Top metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -359,9 +377,43 @@ export function Dashboard() {
                 ))}
               </div>
             ) : productsQuery.error ? (
-              <div className="flex items-center gap-2 p-3 rounded" style={{ backgroundColor: 'var(--sne-surface-elevated)', color: 'var(--sne-critical)' }}>
-                <AlertCircle className="w-4 h-4" />
-                <span className="text-sm">Erro ao carregar produtos. Tente novamente mais tarde.</span>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 p-3 rounded border" style={{ backgroundColor: 'var(--sne-surface-elevated)', borderColor: 'var(--border)' }}>
+                  <AlertCircle className="w-4 h-4" style={{ color: 'var(--sne-critical)' }} />
+                  <div className="flex-1">
+                    <div className="text-sm" style={{ color: 'var(--sne-critical)', fontWeight: 600 }}>
+                      Erro ao carregar produtos
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: 'var(--sne-text-secondary)' }}>
+                      {productsQuery.error instanceof Error 
+                        ? productsQuery.error.message 
+                        : 'A API do Passport pode estar temporariamente indisponível. Tente novamente em alguns instantes.'}
+                    </div>
+                  </div>
+                </div>
+                {/* Fallback: Produtos básicos quando API falha */}
+                <div className="p-3 rounded border" style={{ backgroundColor: 'var(--sne-bg)', borderColor: 'var(--border)', opacity: 0.7 }}>
+                  <div className="text-xs mb-2" style={{ color: 'var(--sne-text-secondary)', fontStyle: 'italic' }}>
+                    Informações básicas (API indisponível):
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-sm" style={{ color: 'var(--sne-text-primary)' }}>
+                      <strong>SNE Box</strong> — Hardware seguro com Secure Enclave
+                    </div>
+                    <div className="text-sm" style={{ color: 'var(--sne-text-primary)' }}>
+                      <strong>SNE Keys</strong> — Chaves físicas e virtuais
+                    </div>
+                    <div className="text-sm" style={{ color: 'var(--sne-text-primary)' }}>
+                      <strong>Licenças</strong> — Acesso a nós SNE
+                    </div>
+                  </div>
+                  <div className="mt-3 text-xs" style={{ color: 'var(--sne-text-secondary)' }}>
+                    Para informações de preços e disponibilidade, conecte-se ao{' '}
+                    <a href="https://pass.snelabs.space" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--sne-accent)' }}>
+                      SNE Scroll Passport
+                    </a>
+                  </div>
+                </div>
               </div>
             ) : productsQuery.data?.products && productsQuery.data.products.length > 0 ? (
               <div className="space-y-3">
