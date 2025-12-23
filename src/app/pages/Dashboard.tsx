@@ -3,15 +3,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { MetricCard } from '../components/sne/MetricCard';
 import { StatusBadge } from '../components/sne/StatusBadge';
 import { WalletConnect } from '../../components/passport/WalletConnect';
-import { BalanceDisplay } from '../../components/passport/BalanceDisplay';
-import { GasTracker } from '../../components/passport/GasTracker';
 import { useLookupAddress, useProducts, useCheckLicense } from '../../hooks/usePassportData';
 import { useAccount } from 'wagmi';
-import { Activity, Shield, Zap, Clock, AlertCircle } from 'lucide-react';
+import { Shield, AlertCircle, Search } from 'lucide-react';
 import { Skeleton } from '../components/ui/skeleton';
-import { AddressBalance } from '../../components/passport/AddressBalance';
-import { formatAddress } from '../../utils/format';
-import type { Address } from '../../types/passport';
+import { ProductCard } from '../../components/passport/ProductCard';
+import { CheckoutModal } from '../../components/passport/CheckoutModal';
+import type { Product } from '../../types/passport';
 
 /**
  * Consumer-focused Read-only Dashboard for SNE (SNE Pass / SNE Keys / SNE Box)
@@ -86,6 +84,10 @@ export function Dashboard() {
   // query state
   const [queryAddr, setQueryAddr] = useState<string>('');
   const [manualLookup, setManualLookup] = useState<string | null>(null);
+  
+  // checkout state
+  const [checkoutProduct, setCheckoutProduct] = useState<Product | null>(null);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   
   // Auto-preenchimento quando wallet conectada
   useEffect(() => {
@@ -184,7 +186,6 @@ export function Dashboard() {
   const licensesCount = lookup?.licenses?.length ?? 0;
   const keysCount = lookup?.keys?.length ?? 0;
   const boxesCount = lookup?.boxes?.length ?? 0;
-  const publicNodes = lookup?.pou?.nodesPublic ?? 0;
 
   return (
     <div className="min-h-screen py-8 px-6 lg:px-24">
@@ -192,22 +193,23 @@ export function Dashboard() {
         {/* Header */}
         <div className="mb-6 flex items-start gap-4">
           <div>
-            <h1 style={{ color: 'var(--sne-text-primary)' }}>SNE · Scroll Pass</h1>
-            <div style={{ color: 'var(--sne-text-secondary)' }}>Camada pública read-only — verifique licenças, chaves e SNE Box.</div>
+            <h1 style={{ color: 'var(--sne-text-primary)' }}>SNE Vault Dashboard</h1>
+            <div style={{ color: 'var(--sne-text-secondary)' }}>Compre produtos e valide licenças publicamente.</div>
           </div>
           <div style={{ marginLeft: 'auto' }} className="flex items-center gap-3">
-            {isConnected && <BalanceDisplay />}
-            <GasTracker />
             <WalletConnect />
-            <StatusBadge status="active">Privacidade • Read-only</StatusBadge>
+            <StatusBadge status="active">Validador Público</StatusBadge>
           </div>
         </div>
 
-        {/* Lookup / Search */}
+        {/* Lookup / Search - Validador Público */}
         <div className="mb-6 rounded border p-4" style={{ backgroundColor: 'var(--sne-surface-1)', borderColor: 'var(--border)' }}>
-          <h3 style={{ color: 'var(--sne-text-primary)' }}>Inspecionar endereço público</h3>
+          <div className="flex items-center gap-2 mb-2">
+            <Search className="w-5 h-5" style={{ color: 'var(--sne-accent)' }} />
+            <h3 style={{ color: 'var(--sne-text-primary)' }}>Validador de Licenças Público</h3>
+          </div>
           <p style={{ color: 'var(--sne-text-secondary)', marginBottom: 8 }}>
-            Cole um endereço Ethereum/Scroll ou ENS para ver licenças públicas, SNE Keys vinculadas e SNE Box associadas. Nenhuma wallet necessária.
+            Cole um endereço Ethereum/Scroll ou ENS para verificar licenças públicas. Nenhuma wallet necessária.
           </p>
 
           <div className="flex gap-2 items-center">
@@ -248,23 +250,14 @@ export function Dashboard() {
           )}
         </div>
 
-        {/* Balance do endereço pesquisado */}
-        {queryAddr.trim() && /^0x[a-fA-F0-9]{40}$/.test(queryAddr.trim()) && (
-          <div className="mb-6">
-            <AddressBalance 
-              address={queryAddr.trim() as Address} 
-              label={`Balance de ${formatAddress(queryAddr.trim())}`}
-            />
+        {/* Top metrics - Simplificado: só quando há lookup */}
+        {lookup && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <MetricCard label="Licenças Encontradas" value={licensesCount} icon={<Shield className="w-5 h-5" />} />
+            <MetricCard label="SNE Keys" value={keysCount} icon={<Shield className="w-5 h-5" />} />
+            <MetricCard label="SNE Boxes" value={boxesCount} icon={<Shield className="w-5 h-5" />} />
           </div>
         )}
-
-        {/* Top metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <MetricCard label="Licenças Públicas" value={licensesCount} icon={<Shield className="w-5 h-5" />} />
-          <MetricCard label="SNE Keys (públicas)" value={keysCount} icon={<Activity className="w-5 h-5" />} />
-          <MetricCard label="SNE Boxes associadas" value={boxesCount} icon={<Zap className="w-5 h-5" />} />
-          <MetricCard label="Nós públicos (PoU)" value={publicNodes} icon={<Clock className="w-5 h-5" />} />
-        </div>
 
         {/* Licenses (full width now that heatmap removed) */}
         <div className="rounded border p-6 mb-8" style={{ backgroundColor: 'var(--sne-surface-1)', borderColor: 'var(--border)' }}>
@@ -308,68 +301,12 @@ export function Dashboard() {
           )}
         </div>
 
-        {/* Keys + Boxes + Products */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Keys */}
-          <div className="rounded border p-6" style={{ backgroundColor: 'var(--sne-surface-1)', borderColor: 'var(--border)' }}>
-            <h4 style={{ color: 'var(--sne-text-primary)' }}>SNE Keys públicas</h4>
-            <p style={{ color: 'var(--sne-text-secondary)', marginBottom: 8 }}>Chaves físicas/virtuais associadas publicamente ao endereço.</p>
-
-            {!lookup ? (
-              <div style={{ color: 'var(--sne-text-secondary)' }}>Use a busca para visualizar chaves públicas.</div>
-            ) : lookup.keys.length === 0 ? (
-              <div style={{ color: 'var(--sne-text-secondary)' }}>Nenhuma chave pública encontrada.</div>
-            ) : (
-              <div className="space-y-3">
-                {lookup.keys.map((k) => (
-                  <div key={k.id} className="p-3 rounded border" style={{ backgroundColor: 'var(--sne-bg)', borderColor: 'var(--border)' }}>
-                    <div style={{ fontWeight: 600, color: 'var(--sne-text-primary)' }}>{k.id}</div>
-                    <div style={{ color: 'var(--sne-text-secondary)', fontSize: '0.9rem' }}>
-                      Tipo: {k.type} · Estado: {k.status} {k.boundTo ? `· Bound: ${k.boundTo}` : ''}
-                    </div>
-                    <div style={{ marginTop: 8 }}>
-                      <a href={`/keys/${k.id}`} className="px-3 py-1 rounded" style={{ backgroundColor: 'var(--sne-surface-elevated)' }}>
-                        Ver
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Boxes */}
-          <div className="rounded border p-6" style={{ backgroundColor: 'var(--sne-surface-1)', borderColor: 'var(--border)' }}>
-            <h4 style={{ color: 'var(--sne-text-primary)' }}>SNE Box</h4>
-            <p style={{ color: 'var(--sne-text-secondary)', marginBottom: 8 }}>Hardware público associado (quando aplicável).</p>
-
-            {!lookup ? (
-              <div style={{ color: 'var(--sne-text-secondary)' }}>Use a busca para visualizar SNE Boxes públicas.</div>
-            ) : lookup.boxes.length === 0 ? (
-              <div style={{ color: 'var(--sne-text-secondary)' }}>Nenhuma SNE Box associada.</div>
-            ) : (
-              <div className="space-y-3">
-                {lookup.boxes.map((b) => (
-                  <div key={b.id} className="p-3 rounded border" style={{ backgroundColor: 'var(--sne-bg)', borderColor: 'var(--border)' }}>
-                    <div style={{ fontWeight: 600, color: 'var(--sne-text-primary)' }}>{b.id} · {b.tier.toUpperCase()}</div>
-                    <div style={{ color: 'var(--sne-text-secondary)', fontSize: '0.9rem' }}>
-                      Provisionado: {b.provisioned ? 'Sim' : 'Não'} {b.lastSeen ? `· Última vez: ${new Date(b.lastSeen).toLocaleString()}` : ''}
-                    </div>
-                    <div style={{ marginTop: 8 }}>
-                      <a href={`/box/${b.id}`} className="px-3 py-1 rounded" style={{ backgroundColor: 'var(--sne-surface-elevated)' }}>
-                        Ver
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Product catalog */}
-          <div className="rounded border p-6" style={{ backgroundColor: 'var(--sne-surface-1)', borderColor: 'var(--border)' }}>
-            <h4 style={{ color: 'var(--sne-text-primary)' }}>Comprar / Adquirir</h4>
-            <p style={{ color: 'var(--sne-text-secondary)', marginBottom: 8 }}>Adquira SNE Box, SNE Keys e Licenças. O checkout requer wallet/flow de compra.</p>
+        {/* Products - Seção Principal de Compras */}
+        <div className="rounded border p-6 mb-8" style={{ backgroundColor: 'var(--sne-surface-1)', borderColor: 'var(--border)' }}>
+          <h3 style={{ color: 'var(--sne-text-primary)', marginBottom: 8 }}>Comprar Produtos</h3>
+          <p style={{ color: 'var(--sne-text-secondary)', marginBottom: 12 }}>
+            Adquira SNE Box, SNE Keys e Licenças. Conecte sua wallet para realizar a compra.
+          </p>
             {productsQuery.isLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
@@ -416,34 +353,29 @@ export function Dashboard() {
                 </div>
               </div>
             ) : productsQuery.data?.products && productsQuery.data.products.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {productsQuery.data.products.map((p) => (
-                  <div key={p.id} className="p-3 rounded border" style={{ backgroundColor: 'var(--sne-bg)', borderColor: 'var(--border)' }}>
-                    <div style={{ fontWeight: 700 }}>{p.title}</div>
-                    <div style={{ color: 'var(--sne-text-secondary)', fontSize: '0.9rem' }}>
-                      {p.features?.join(' • ') || 'Ver detalhes'}
-                    </div>
-                    <div className="mt-2 flex items-center justify-between">
-                      <div style={{ fontWeight: 600 }}>
-                        USD ${p.priceUSD}
-                        {p.priceETH && <span className="text-sm ml-2" style={{ color: 'var(--sne-text-secondary)' }}>({p.priceETH} ETH)</span>}
-                      </div>
-                      <a 
-                        href={`/checkout/${p.id}`} 
-                        className="px-3 py-1 rounded" 
-                        style={{ backgroundColor: 'var(--sne-surface-elevated)' }}
-                      >
-                        {p.available ? 'Comprar' : 'Indisponível'}
-                      </a>
-                    </div>
-                  </div>
+                  <ProductCard 
+                    key={p.id} 
+                    product={p}
+                    onPurchase={(productId) => {
+                      if (!isConnected) {
+                        alert('Por favor, conecte sua wallet para realizar a compra.');
+                        return;
+                      }
+                      const selectedProduct = productsQuery.data.products.find(prod => prod.id === productId);
+                      if (selectedProduct) {
+                        setCheckoutProduct(selectedProduct);
+                        setCheckoutOpen(true);
+                      }
+                    }}
+                  />
                 ))}
               </div>
             ) : (
               <div style={{ color: 'var(--sne-text-secondary)' }}>Nenhum produto disponível no momento.</div>
             )}
           </div>
-        </div>
 
         {/* Audit / Activity (local-only) */}
         <div className="rounded border p-6" style={{ backgroundColor: 'var(--sne-surface-1)', borderColor: 'var(--border)' }}>
@@ -457,6 +389,13 @@ export function Dashboard() {
             ))}
           </div>
         </div>
+
+        {/* Checkout Modal */}
+        <CheckoutModal
+          product={checkoutProduct}
+          open={checkoutOpen}
+          onOpenChange={setCheckoutOpen}
+        />
       </div>
     </div>
   );
