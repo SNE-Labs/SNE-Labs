@@ -144,7 +144,7 @@ export function Dashboard() {
   }, [lookupQuery.data, manualLookup]);
 
   // Componente para verificar licença on-chain usando hook
-  function LicenseCheckButton({ nodeId, licenseId }: { nodeId: string; licenseId: string }) {
+  function LicenseCheckButton({ nodeId, licenseId: _licenseId }: { nodeId: string; licenseId: string }) {
     const [isChecking, setIsChecking] = useState(false);
     const checkQuery = useCheckLicense(isChecking ? nodeId : null);
     
