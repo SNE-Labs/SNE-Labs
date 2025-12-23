@@ -27,7 +27,6 @@ SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execu�
 
 **Não recomendado para:** Iniciantes em programação ou desenvolvedores sem experiência em sistemas de baixo nível e criptografia.
 
-<<<<<<< HEAD
 ## 🚀 Deploy no Vercel
 
 ### Opção 1: Deploy via GitHub (Recomendado)
@@ -63,8 +62,6 @@ vercel
 
 # Para produção
 vercel --prod
-=======
->>>>>>> b2f37625506d0c32ae86d0713af1f008148bc004
 ```
 
 
@@ -87,7 +84,6 @@ Veja a documentação completa em [`SNE-DESIGN-SYSTEM.md`](./SNE-DESIGN-SYSTEM.m
   - Governança e SNIPs
 - **Contracts** - Informações sobre smart contracts, SDK e exemplos de integração
 
-<<<<<<< HEAD
 ## 🔧 Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto:
@@ -107,8 +103,6 @@ VITE_SNE_API_URL=https://snelabs.space/api
 > - Leia dados do contrato `SNELicenseRegistry`
 > - Implemente endpoints `/api/onchain/lookup` e `/api/onchain/check`
 
-=======
->>>>>>> b2f37625506d0c32ae86d0713af1f008148bc004
 ## 🌐 Stack Tecnológica
 
 ### Blockchain & Web3
