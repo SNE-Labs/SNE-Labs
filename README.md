@@ -99,13 +99,6 @@ SNE VAULT/
 └── vercel.json               # Configuração do Vercel
 ```
 
-## 🎨 Design System
-
-O projeto utiliza um design system customizado baseado em:
-
-- **Cores:** Preto (#0B0B0B) + Laranja (#FF6A00)
-- **Tipografia:** Inter (UI) + JetBrains Mono (código)
-- **Componentes:** shadcn/ui + componentes SNE customizados
 
 Veja a documentação completa em [`SNE-DESIGN-SYSTEM.md`](./SNE-DESIGN-SYSTEM.md)
 
