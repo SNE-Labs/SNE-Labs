@@ -43,7 +43,7 @@ SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execu�
 2. **Configure as variáveis de ambiente (opcional):**
    ```
    VITE_USE_BACKEND=false
-   VITE_SNE_API_URL=https://sne-scroll-pass.vercel.app
+   VITE_SNE_API_URL=https://snelabs.space/api
    ```
 
 3. **Deploy:**
@@ -174,7 +174,7 @@ VITE_USE_BACKEND=false
 
 # URL da API backend para leitura on-chain
 # Deve apontar para um serviço que faz proxy para Scroll L2
-VITE_SNE_API_URL=https://sne-scroll-pass.vercel.app
+VITE_SNE_API_URL=https://snelabs.space/api
 ```
 
 > **Importante:** Para produção, você precisará de um backend que:
@@ -209,6 +209,7 @@ Este projeto está licenciado sob a [MIT License](https://opensource.org/license
 
 ## 🔗 Links
 
+- **Website:** [snelabs.space](https://snelabs.space)
 - **Repositório:** [github.com/SNE-Labs/SNE-Labs](https://github.com/SNE-Labs/SNE-Labs)
 - **Documentação:** Ver seção Docs na aplicação
 - **Design System:** [`SNE-DESIGN-SYSTEM.md`](./SNE-DESIGN-SYSTEM.md)

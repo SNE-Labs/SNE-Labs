@@ -236,7 +236,7 @@ export function Home({ onNavigate }: HomeProps) {
               <CodeBlock
                 language="bash"
                 code={`# Instalar cliente SNE
-curl -fsSL https://sne.network/install.sh | sh
+curl -fsSL https://snelabs.space/install.sh | sh
 
 # Registrar nó (requer licença on-chain)
 sne register --wallet 0x... --license-id 42

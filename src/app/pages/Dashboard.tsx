@@ -16,7 +16,7 @@ import { Activity, Shield, Zap, Clock } from 'lucide-react';
  */
 
 const API_BASE =
-  (import.meta.env?.VITE_SNE_API_URL as string | undefined) ?? 'https://sne-scroll-pass.vercel.app';
+  (import.meta.env?.VITE_SNE_API_URL as string | undefined) ?? 'https://snelabs.space/api';
 const USE_BACKEND = ((import.meta.env?.VITE_USE_BACKEND as string | undefined) ?? 'false') === 'true';
 
 type License = {
