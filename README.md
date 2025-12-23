@@ -2,9 +2,6 @@
 
 **Sistema de Nós de Execução** - Infraestrutura soberana para execução verificável em edge computing.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/SNE-Labs/SNE-Labs/tree/main/SNE%20VAULT)
-
 ## 📋 Sobre o Projeto
 
 SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execução (SNE)**, uma infraestrutura verificável de nível enterprise que fornece:
@@ -30,6 +27,7 @@ SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execu�
 
 **Não recomendado para:** Iniciantes em programação ou desenvolvedores sem experiência em sistemas de baixo nível e criptografia.
 
+<<<<<<< HEAD
 ## 🚀 Deploy no Vercel
 
 ### Opção 1: Deploy via GitHub (Recomendado)
@@ -65,84 +63,10 @@ vercel
 
 # Para produção
 vercel --prod
+=======
+>>>>>>> b2f37625506d0c32ae86d0713af1f008148bc004
 ```
 
-## 🛠️ Desenvolvimento Local
-
-### Pré-requisitos Técnicos
-
-**Software:**
-- Node.js >= 18.0.0
-- npm >= 9.0.0
-- TypeScript >= 5.2.2
-- Git
-
-**Conhecimento Recomendado:**
-- React 18+ e TypeScript
-- Vite e bundlers modernos
-- Tailwind CSS v4
-- Conceitos de blockchain (Ethereum, L2s)
-- Noções básicas de criptografia
-
-### Instalação
-
-```bash
-# Clone o repositório
-git clone https://github.com/SNE-Labs/SNE-Labs.git
-cd "SNE VAULT"
-
-# Instale as dependências
-npm install
-
-# Inicie o servidor de desenvolvimento
-npm run dev
-```
-
-O projeto estará disponível em `http://localhost:5173`
-
-> **Nota:** O frontend é uma interface de documentação e dashboard. A implementação completa do SNE requer componentes backend, smart contracts na Scroll L2, e hardware especializado (SNE Box).
-
-### Scripts Disponíveis
-
-```bash
-# Desenvolvimento
-npm run dev
-
-# Build para produção
-npm run build
-
-# Preview do build
-npm run preview
-
-# Lint
-npm run lint
-```
-
-## 📁 Estrutura do Projeto
-
-```
-SNE VAULT/
-├── src/
-│   ├── app/
-│   │   ├── components/
-│   │   │   ├── sne/          # Componentes do design system SNE
-│   │   │   └── ui/           # Componentes shadcn/ui
-│   │   └── pages/            # Páginas da aplicação
-│   └── styles/               # Estilos globais
-├── public/                   # Arquivos estáticos
-├── index.html                # Ponto de entrada HTML
-├── vite.config.ts            # Configuração do Vite
-├── tsconfig.json             # Configuração TypeScript
-└── vercel.json               # Configuração do Vercel
-```
-
-## 🎨 Design System
-
-O projeto utiliza um design system customizado baseado em:
-
-- **Cores:** Preto (#0B0B0B) + Laranja (#FF6A00)
-- **Tipografia:** Inter (UI) + JetBrains Mono (código)
-- **Componentes:** shadcn/ui + componentes SNE customizados
 
 Veja a documentação completa em [`SNE-DESIGN-SYSTEM.md`](./SNE-DESIGN-SYSTEM.md)
 
@@ -163,6 +87,7 @@ Veja a documentação completa em [`SNE-DESIGN-SYSTEM.md`](./SNE-DESIGN-SYSTEM.m
   - Governança e SNIPs
 - **Contracts** - Informações sobre smart contracts, SDK e exemplos de integração
 
+<<<<<<< HEAD
 ## 🔧 Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto:
@@ -182,14 +107,9 @@ VITE_SNE_API_URL=https://snelabs.space/api
 > - Leia dados do contrato `SNELicenseRegistry`
 > - Implemente endpoints `/api/onchain/lookup` e `/api/onchain/check`
 
+=======
+>>>>>>> b2f37625506d0c32ae86d0713af1f008148bc004
 ## 🌐 Stack Tecnológica
-
-### Frontend
-- **React 18** - Biblioteca UI com TypeScript
-- **Vite** - Build tool e dev server (ESM, HMR)
-- **Tailwind CSS v4** - Estilização utility-first
-- **shadcn/ui** - Componentes UI baseados em Radix UI
-- **Lucide React** - Ícones SVG
 
 ### Blockchain & Web3
 - **Viem** - Cliente Ethereum/Scroll L2 (TypeScript)
@@ -214,36 +134,6 @@ Este projeto está licenciado sob a [MIT License](https://opensource.org/license
 - **Documentação:** Ver seção Docs na aplicação
 - **Design System:** [`SNE-DESIGN-SYSTEM.md`](./SNE-DESIGN-SYSTEM.md)
 
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Este projeto requer conhecimento técnico avançado.
-
-### Antes de Contribuir
-
-- Leia toda a documentação técnica em `/docs`
-- Entenda a arquitetura do sistema
-- Familiarize-se com os conceitos de segurança criptográfica
-- Revise os smart contracts na Scroll L2
-
-### Processo
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Siga os padrões de código existentes (TypeScript strict, ESLint)
-4. Adicione testes se aplicável
-5. Atualize a documentação se necessário
-6. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-7. Push para a branch (`git push origin feature/AmazingFeature`)
-8. Abra um Pull Request com descrição detalhada
-
-### Áreas que Precisam de Contribuição
-
-- Melhorias na documentação técnica
-- Exemplos de código adicionais
-- Testes e validações
-- Otimizações de performance
-- Traduções (atualmente em português)
-
 ## 📧 Contato
 
 SNE Labs - [GitHub](https://github.com/SNE-Labs)
@@ -257,7 +147,7 @@ SNE Labs - [GitHub](https://github.com/SNE-Labs)
 
 ### Conceitos Técnicos Avançados
 
-O SNE implementa conceitos avançados de:
+O SNE Labs implementa conceitos avançados de:
 
 - **Criptografia:** AES-256, KDF, assinaturas ECDSA, Merkle proofs
 - **Hardware Security:** Secure Elements, TPM, TEE, tamper detection
@@ -277,6 +167,4 @@ Se você é novo nesses conceitos, recomendamos estudar:
 ---
 
 **Desenvolvido com ❤️ pela equipe SNE Labs**
-
-> **Aviso Legal:** Este é um projeto técnico avançado. Use por sua conta e risco. Certifique-se de entender completamente os conceitos de segurança antes de implementar em produção.
 
