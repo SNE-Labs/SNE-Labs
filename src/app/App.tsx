@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Navigation } from './components/sne/Navigation';
 import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
@@ -42,6 +43,7 @@ function App() {
       <main className="pt-16">
         {renderPage()}
       </main>
+      <Analytics />
     </div>
   );
 }
