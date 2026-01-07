@@ -45,26 +45,6 @@ SNE Vault é o frontend e documentação técnica do **Sistema de Nós de Execu�
   - Governança e SNIPs
 - **Contracts** - Informações sobre smart contracts, SDK e exemplos de integração
 
-## 🔧 Variáveis de Ambiente
-
-Crie um arquivo `.env` na raiz do projeto:
-
-```env
-# Habilitar backend (true/false)
-# Quando false, o Dashboard usa dados mock para demonstração
-VITE_USE_BACKEND=false
-
-# URL da API backend para leitura on-chain
-# Deve apontar para um serviço que faz proxy para Scroll L2
-VITE_SNE_API_URL=https://snelabs.space/api
-```
-
-> **Importante:** Para produção, você precisará de um backend que:
-> - Conecte-se à Scroll L2 via RPC
-> - Leia dados do contrato `SNELicenseRegistry`
-> - Implemente endpoints `/api/onchain/lookup` e `/api/onchain/check`
-
-## 🌐 Stack Tecnológica
 
 ### Blockchain & Web3
 - **Viem** - Cliente Ethereum/Scroll L2 (TypeScript)
